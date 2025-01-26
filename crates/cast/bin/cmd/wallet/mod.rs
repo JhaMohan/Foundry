@@ -265,11 +265,13 @@ impl WalletSubcommands {
                         if let Some(json) = json_values.as_mut() {
                             json.push(json!({
                                 "address": wallet.address().to_checksum(None),
+                                "public_key": format!("0x{}", hex::encode(public_key.to_bytes())),
                                 "private_key": format!("0x{}", hex::encode(wallet.credential().to_bytes())),
                             }))
                         } else {
                             sh_println!("Successfully created new keypair.")?;
                             sh_println!("Address:     {}", wallet.address().to_checksum(None))?;
+                            sh_println!("Public key:  0x{}", hex::encode(public_key.to_bytes()))?;
                             sh_println!(
                                 "Private key: 0x{}",
                                 hex::encode(wallet.credential().to_bytes())
@@ -347,7 +349,9 @@ impl WalletSubcommands {
                     .signer()
                     .await?;
                 let addr = wallet.address();
+                let public_key = format!("0x{}", hex::encode(public_key.to_bytes()));
                 sh_println!("{}", addr.to_checksum(None))?;
+                sh_println!("{}", public_key)?;
             }
             Self::Sign { message, data, from_file, no_hash, wallet } => {
                 let wallet = wallet.signer().await?;
